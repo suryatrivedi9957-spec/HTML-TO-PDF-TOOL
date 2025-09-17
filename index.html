@@ -3,100 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML to PDF Tool</title>
-  <!-- html2canvas और jsPDF लाइब्रेरी -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+  <title>HTML to PDF Converter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f2f2f2;
       text-align: center;
-    }
-    header {
-      background: #007bff;
-      color: white;
-      padding: 15px;
-      font-size: 20px;
-    }
-    #content {
-      width: 80%;
-      margin: 20px auto;
       padding: 20px;
-      background: white;
-      border: 1px solid #ddd;
+    }
+    textarea {
+      width: 90%;
+      height: 200px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      padding: 10px;
+    }
+    #preview {
+      width: 90%;
+      margin: auto;
+      padding: 20px;
+      border: 2px solid #007BFF;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
       text-align: left;
+      background: #f9f9f9;
     }
     button {
-      margin: 20px;
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background: #28a745;
+      background: green;
       color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
+      margin: 5px;
     }
     button:hover {
-      background: #1e7e34;
-    }
-    footer {
-      margin-top: 30px;
-      padding: 10px;
-      background: #007bff;
-      color: white;
-      font-size: 14px;
+      background: darkgreen;
     }
   </style>
 </head>
 <body>
-  <header>
-    HTML to PDF Converter 🔽
-  </header>
 
-  <div id="content">
-    <h2>यह आपका Demo Content है</h2>
-    <p>
-      इस text और नीचे दिए गए हिस्से को आप PDF में बदल सकते हैं।  
-      आप चाहें तो यहाँ अपने notes, articles, या study material लिख सकते हैं।  
-    </p>
-    <ul>
-      <li>✔ बटन दबाएँ और PDF अपने आप बन जाएगी।</li>
-      <li>✔ Design और text जैसा है वैसा ही PDF में दिखेगा।</li>
-      <li>✔ Free और आसान tool।</li>
-    </ul>
+  <h2>📝 HTML to PDF Converter</h2>
+  
+  <textarea id="htmlInput" placeholder="यहाँ अपना HTML / Text लिखें..."></textarea><br>
+  <button onclick="updatePreview()">Preview</button>
+  <button onclick="downloadPDF()">Download PDF</button>
+  
+  <h3>🔎 Preview:</h3>
+  <div id="preview">
+    <p style="color:blue; font-size:18px;">यह Demo Preview है... ✨</p>
   </div>
 
-  <button onclick="downloadPDF()">Download PDF</button>
-
-  <footer>
-    © 2025 | Made with ❤ by Rishabh
-  </footer>
-
   <script>
-    async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const element = document.getElementById("content");
+    // Preview update
+    function updatePreview() {
+      let htmlContent = document.getElementById("htmlInput").value;
+      document.getElementById("preview").innerHTML = htmlContent;
+    }
 
-      // Content को canvas में बदलना
-      const canvas = await html2canvas(element, { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
-
-      // PDF सेट करना
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("download.pdf");  // अब केवल बटन दबाने पर ही download होगा
+    // PDF download
+    function downloadPDF() {
+      const element = document.getElementById("preview");
+      var opt = {
+        margin:       0.5,
+        filename:     'MyFile.pdf',
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
     }
   </script>
+
 </body>
 </html>
