@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML to PDF Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f4f6f9;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      margin-bottom: 15px;
+      resize: vertical;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007BFF;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>HTML to PDF Converter</h2>
+    <textarea id="userInput" placeholder="Write or paste your HTML content here..."></textarea>
+    <button onclick="downloadPDF()">Convert to PDF</button>
+  </div>
+
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    function downloadPDF() {
+      let inputText = document.getElementById("userInput").value;
+
+      // Create a temporary wrapper for rendering
+      let wrapper = document.createElement("div");
+      wrapper.innerHTML = inputText;
+      document.body.appendChild(wrapper);
+      wrapper.style.padding = "20px";
+      wrapper.style.background = "#fff";
+      wrapper.style.color = "#000";
+
+      // Generate PDF
+      html2pdf().set({
+        margin: 10,
+        filename: 'converted.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+      }).from(wrapper).save().then(() => {
+        document.body.removeChild(wrapper); // Clean after save
+      });
+    }
+  </script>
+</body>
+</html>
